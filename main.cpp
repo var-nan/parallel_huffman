@@ -15,4 +15,5 @@ int main() {
     huffman::HuffTree tree(frequencies);
 
     tree.printTree(frequencies);
+	return 0;
 }
