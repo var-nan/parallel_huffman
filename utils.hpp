@@ -1,4 +1,7 @@
-#include <iostream>
+#ifndef UTILS_H
+#define UTILS_H 
+
+#include <iostream> 
 #include <vector>
 #include <fstream>
 
@@ -7,6 +10,8 @@ using namespace std;
 typedef uint8_t Byte;
 typedef uint16_t DByte;
 typedef uint32_t uint;
+
+#define MAX_CHAR 128
 
 enum BITS{
     ZERO    = 0b0,
@@ -55,12 +60,16 @@ namespace huffman{
 
     public:
         HuffTree(const vector<size_t> &frequencies);// build huffman tree from the frequencies
-        
+
         h_code_tag encode(const Byte& byte);
 
         Byte decode(const Byte& byte);
 
-        void printTree(const vector<size_t> &frequencies) const;
+        vector<string> printTree(const vector<size_t> &frequencies) const;
 
     };
 }
+
+bool validate(const vector<string> &prefixes);
+
+#endif

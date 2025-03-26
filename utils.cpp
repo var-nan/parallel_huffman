@@ -14,7 +14,7 @@ HuffTree::HuffTree(const std::vector<size_t> &frequencies) {
     std::priority_queue<std::pair<h_node_t *, size_t>,
             std::vector<std::pair<h_node_t *, size_t>>, decltype(comparator)> pq(comparator);
 
-    for (uint16_t i = 0; i < 256; i++){
+    for (uint16_t i = 0; i < MAX_CHAR; i++){
         if (!frequencies[i]) continue; // ignore zeros.
         //
         h_node_t *current = new h_node(i);
@@ -22,7 +22,7 @@ HuffTree::HuffTree(const std::vector<size_t> &frequencies) {
     }
 
     struct h_node *current = nullptr;
-    uint index = 256;
+    uint index = MAX_CHAR;
 
     while (pq.size() != 1){
 
@@ -47,7 +47,7 @@ HuffTree::HuffTree(const std::vector<size_t> &frequencies) {
 
 void HuffTree::fill(h_node_t *root, uint16_t tag, uint8_t level) {
 
-    if (root->id > 256) {
+    if (root->id > MAX_CHAR) {
         if (root->children.zero) fill(root->children.zero, (tag<<1), level+1);
         if (root->children.one) fill(root->children.one, (tag<<1)|0b1, level+1);
     }
@@ -57,7 +57,7 @@ void HuffTree::fill(h_node_t *root, uint16_t tag, uint8_t level) {
     }
 }
 
-void go(const h_node_t *current, const vector<size_t> &frequencies){
+static void go(const h_node_t *current, const vector<size_t> &frequencies, vector<string> &codes){
     auto str = [](Byte tag, Byte size){
         string s = "";
         for (int i = 0; i < size; i++){
@@ -67,20 +67,34 @@ void go(const h_node_t *current, const vector<size_t> &frequencies){
         return s;
     };
 
-    if (current->id < 256){
+    if (current->id < MAX_CHAR){
+        codes[current->id] = str(current->leaf.symbol, current->leaf.size);
+        // codes.push_back(str(current->leaf.symbol, current->leaf.size));
         cout << "Id: " << current->id << " , freq: " << frequencies[current->id]
             << "\t, size: " << to_string(current->leaf.size) << ", code: " 
             << str(current->leaf.symbol, current->leaf.size) << endl;
     }
 
-    if (current->id >= 256){
-        if (current->children.zero) go(current->children.zero, frequencies);
-        if (current->children.one) go(current->children.one, frequencies);
+    if (current->id >= MAX_CHAR){
+        if (current->children.zero) go(current->children.zero, frequencies, codes);
+        if (current->children.one) go(current->children.one, frequencies, codes);
     }
 }
 
-void HuffTree::printTree(const vector<size_t> &frequencies) const {
+std::vector<std::string> HuffTree::printTree(const std::vector<size_t> &frequencies) const {
 
-    go(root, frequencies);
-    
+    std::vector<std::string> codes(MAX_CHAR);
+    go(root, frequencies, codes);
+    return codes;
+}
+
+bool validate(const vector<string> &prefixes) {
+
+    for (int i = 0; i < prefixes.size(); i++){
+        for (int j = i+1; j < prefixes.size(); j++){
+
+            if (!prefixes[i].empty() && !prefixes[j].empty() && prefixes[j].find(prefixes[i]) == 0) return false;
+        }
+    }
+    return true;
 }
