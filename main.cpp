@@ -26,7 +26,7 @@ int main() {
 
 
     string inFile = "./dummy.txt";
-    string outFile = "./dummy.zi";
+    string outFile = "./dummy_enc.txt";
 
     serial::encode(inFile, outFile);
 

@@ -98,3 +98,8 @@ bool validate(const vector<string> &prefixes) {
     }
     return true;
 }
+
+
+std::vector<uint32_t> HuffTree::getEncodings(const std::vector<size_t> &frequencies) const {
+    
+}

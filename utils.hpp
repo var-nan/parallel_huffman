@@ -67,6 +67,8 @@ namespace huffman{
 
         vector<string> printTree(const vector<size_t> &frequencies) const;
 
+        vector<uint32_t> getEncodings(const vector<size_t> &frequencies) const;
+
     };
 }
 
