@@ -27,9 +27,12 @@ void serial::encode(const string& inFileName, const string& outFileName){
 
     // count characters
     vector<size_t> frequencies(MAX_CHAR, 0);
+	size_t freq[MAX_CHAR] = {0};
+	
 
     for (const auto& byte : file_data){
         frequencies[byte]++;
+		freq[byte]++;
     }
 
     huffman::HuffTree tree(frequencies);
