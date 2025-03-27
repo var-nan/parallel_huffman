@@ -14,7 +14,6 @@ void serial::encode(const string& inFileName, const string& outFileName){
 
     if (!file) {
         std::cerr << "File cannot be opened " << std::endl;
-        // error
         return ;
     }
 
@@ -27,7 +26,7 @@ void serial::encode(const string& inFileName, const string& outFileName){
     file.read(file_data.data(), file_size);
 
     // count characters
-    vector<size_t> frequencies(128, 0);
+    vector<size_t> frequencies(MAX_CHAR, 0);
 
     for (const auto& byte : file_data){
         frequencies[byte]++;
